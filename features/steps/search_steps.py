@@ -12,28 +12,6 @@ from config.config import Config
 import time
 
 
-@given('the user is logged in with valid credentials')
-def step_user_logged_in_with_credentials(context):
-    """Ensure user is logged in with valid credentials."""
-    # Navigate to login page
-    login_page = LoginPage(context.driver)
-    login_page.navigate_to_login()
-
-    # Perform login
-    login_page.login(Config.TEST_USERNAME, Config.TEST_PASSWORD)
-
-    # Wait for page to load after login
-    time.sleep(8)  # Increased wait time for page to fully load
-
-    # Wait for page to be ready
-    WebDriverWait(context.driver, 20).until(
-        lambda d: d.execute_script("return document.readyState") == "complete"
-    )
-
-    # Initialize search page
-    context.search_page = SearchPage(context.driver)
-
-
 @when('the user clicks the search button in the navbar')
 def step_click_search_button(context):
     """Click the search button in the navbar."""

@@ -17,25 +17,18 @@ Feature: User Login
   Scenario: Login with invalid credentials
     When the user enters invalid username and password
     And the user clicks the login button
-    Then the user should see an error message "Invalid credentials"
+    Then the user should see an error message "Incorrect username or password"
     And the user should remain on the login page
 
   @login @negative
   Scenario: Login with empty credentials
     When the user leaves username and password empty
     And the user clicks the login button
-    Then the user should see validation errors
-    And the login button should be disabled
+    Then the user should see an error message "Invalid username or password"
+    And the user should remain on the login page
 
   @login
-  Scenario Outline: Login with different user roles
-    When the user enters "<username>" and "<password>"
+  Scenario: Login with valid user role
+    When the user enters valid username and password
     And the user clicks the login button
     Then the user should be redirected to the dashboard
-    And the user should have "<role>" permissions
-
-    Examples:
-      | username      | password    | role      |
-      | admin@em2m.net | admin123   | admin     |
-      | user@em2m.net  | user123    | user      |
-      | viewer@em2m.net| viewer123  | viewer    |

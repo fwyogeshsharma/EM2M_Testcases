@@ -211,8 +211,27 @@ reports/
 screenshots/
 allure-results/
 allure-report/
+.allure/
 behave-report/
+*.html
+*.json
 
 # Test artifacts
 *.xml
 *.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Debug and temporary files
+inspect_*.py
+debug_*.py
+check_*.py
+find_*.py
+test_*.png
+error_screenshot.png
+dropdown_screenshot.png

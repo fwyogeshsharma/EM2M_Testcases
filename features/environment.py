@@ -21,9 +21,10 @@ def before_all(context):
     # Set default timeout
     context.default_timeout = 10
 
-    # Create reports directory if it doesn't exist
-    if not os.path.exists('reports'):
-        os.makedirs('reports')
+    # Create reports directories if they don't exist
+    for directory in ['reports', 'reports/screenshots', 'allure-results']:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
 
     print("Test suite initialization complete")
 
@@ -70,7 +71,7 @@ def after_scenario(context, scenario):
     Runs after each scenario.
     Cleanup and screenshot capture on failure.
     """
-    # Take screenshot on failure
+    # Take screenshot on failure and attach to Allure report
     if scenario.status == 'failed':
         screenshot_dir = 'reports/screenshots'
         if not os.path.exists(screenshot_dir):
@@ -80,6 +81,17 @@ def after_scenario(context, scenario):
         screenshot_path = os.path.join(screenshot_dir, screenshot_name)
         context.driver.save_screenshot(screenshot_path)
         print(f"Screenshot saved: {screenshot_path}")
+
+        # Attach screenshot to Allure report
+        try:
+            import allure
+            allure.attach.file(
+                screenshot_path,
+                name=f"Failure Screenshot - {scenario.name}",
+                attachment_type=allure.attachment_type.PNG
+            )
+        except:
+            pass  # If allure is not available, continue
 
     # Close browser
     if hasattr(context, 'driver'):

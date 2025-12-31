@@ -6,6 +6,10 @@ from behave import given, when, then
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from pages.login_page import LoginPage
+from pages.search_page import SearchPage
+from config.config import Config
+import time
 
 
 @given('the user navigates to "{url}"')
@@ -77,3 +81,22 @@ def step_verify_url_contains(context, expected_url_part):
     current_url = context.driver.current_url
     assert expected_url_part in current_url, \
         f"Expected URL to contain '{expected_url_part}', but got '{current_url}'"
+
+
+@given('the user is logged in with valid credentials')
+def step_user_logged_in_with_valid_credentials(context):
+    """Ensure user is logged in with valid credentials."""
+    login_page = LoginPage(context.driver)
+    login_page.navigate_to_login()
+    login_page.login(Config.TEST_USERNAME, Config.TEST_PASSWORD)
+
+    # Wait for page to load after login
+    time.sleep(8)  # Increased wait time for page to fully load
+
+    # Wait for page to be ready
+    WebDriverWait(context.driver, 20).until(
+        lambda d: d.execute_script("return document.readyState") == "complete"
+    )
+
+    # Initialize search page for search tests
+    context.search_page = SearchPage(context.driver)

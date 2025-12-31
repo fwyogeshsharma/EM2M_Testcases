@@ -184,3 +184,24 @@ def step_verify_count_matches(context):
     assets = context.assets_page.get_all_assets()
     assert count == len(assets), \
         f"Count mismatch: displayed {count}, but found {len(assets)} assets"
+
+
+@when('the user navigates to the assets or dashboard page')
+def step_navigate_to_assets_or_dashboard(context):
+    """Navigate to assets or dashboard page - just verify we're logged in."""
+    import time
+    time.sleep(2)
+    # Already logged in from background, just verify URL is valid
+    current_url = context.driver.current_url
+    assert 'elasticm2m-dev.app.em2m.net' in current_url, f"Not on expected domain: {current_url}"
+
+
+@then('the user should be on a valid page')
+def step_verify_on_valid_page(context):
+    """Verify user is on a valid page after login."""
+    import time
+    time.sleep(1)
+    current_url = context.driver.current_url
+    # Check if we're on dashboard or any authenticated page
+    assert '/login' not in current_url, f"Still on login page: {current_url}"
+    assert 'elasticm2m-dev.app.em2m.net' in current_url, f"Not on expected domain: {current_url}"
